@@ -1,53 +1,16 @@
 #!/bin/bash
 
-# Root path to the 'Swift_UVOT' folder (jisme observation IDs hain)
-swift_path="/media/rohit/Expansion/BHU/Objects/NGC_1275/Swift_UVOT"
+# Root path jaha saare observation ID folders rakhe hain
+root_path="/media/rohit/Expansion/BHU/Objects/Cen_A/Swift_UVOT"
 
-# Target folder for sk_image
-sk_image_dir="$swift_path/sk_image"
+# Swift_UVOT ke andar ek hi sk_image folder banao
+sk_image="$root_path/sk_image"
+mkdir -p "$sk_image"
 
-# Create the target folder if it doesn't exist
-mkdir -p "$sk_image_dir"
-
-# Iterate over all observation folders in Swift_UVOT
-for obs_folder in "$swift_path"/*; do
-    # Skip if it's not a directory or is sk_image
-    if [[ -d "$obs_folder" && "$(basename "$obs_folder")" != "sk_image" ]]; then
-        image_dir="$obs_folder/uvot/image"
-        if [[ -d "$image_dir" ]]; then
-            # Find all files ending with _sk.img.gz
-            for file in "$image_dir"/*_sk.img.gz; do
-                if [[ -f "$file" ]]; then
-                    cp "$file" "$sk_image_dir/"
-                    echo "Copied: $(basename "$file")"
-                fi
-            done
-        fi
+# Har observation ID folder ke liye loop
+for obsid in "$root_path"/*; do
+    if [ -d "$obsid/uvot/image" ]; then
+        cp "$obsid/uvot/image"/*_sk.img.gz "$sk_image"/ 2>/dev/null
+        echo "Copied files from: $(basename "$obsid")"
     fi
 done
-
-
-OR
-
-#!/bin/bash
-shopt -s nullglob
-
-swift_path="/media/rohit/Expansion/BHU/Objects/QSO_B0647+250/Swift_UVOT"
-sk_image_dir="$swift_path/sk_image"
-mkdir -p "$sk_image_dir"
-
-for obs_folder in "$swift_path"/*; do
-    if [[ -d "$obs_folder" && "$(basename "$obs_folder")" != "sk_image" ]]; then
-        image_dir="$obs_folder/uvot/image"
-        if [[ -d "$image_dir" ]]; then
-            for file in "$image_dir"/*_sk.img.gz; do
-                if [[ -f "$file" ]]; then
-                    cp "$file" "$sk_image_dir/"
-                    echo "Copied: $(basename "$file")"
-                fi
-            done
-        fi
-    fi
-done
-
-echo "All done!"
