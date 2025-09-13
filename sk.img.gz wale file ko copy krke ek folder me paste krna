@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Root path to the 'Swift_UVOT' folder (jisme observation IDs hain)
+swift_path="/media/rohit/Expansion/BHU/Objects/NGC_1275/Swift_UVOT"
+
+# Target folder for sk_image
+sk_image_dir="$swift_path/sk_image"
+
+# Create the target folder if it doesn't exist
+mkdir -p "$sk_image_dir"
+
+# Iterate over all observation folders in Swift_UVOT
+for obs_folder in "$swift_path"/*; do
+    # Skip if it's not a directory or is sk_image
+    if [[ -d "$obs_folder" && "$(basename "$obs_folder")" != "sk_image" ]]; then
+        image_dir="$obs_folder/uvot/image"
+        if [[ -d "$image_dir" ]]; then
+            # Find all files ending with _sk.img.gz
+            for file in "$image_dir"/*_sk.img.gz; do
+                if [[ -f "$file" ]]; then
+                    cp "$file" "$sk_image_dir/"
+                    echo "Copied: $(basename "$file")"
+                fi
+            done
+        fi
+    fi
+done
