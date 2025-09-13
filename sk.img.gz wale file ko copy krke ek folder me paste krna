@@ -25,3 +25,29 @@ for obs_folder in "$swift_path"/*; do
         fi
     fi
 done
+
+
+OR
+
+#!/bin/bash
+shopt -s nullglob
+
+swift_path="/media/rohit/Expansion/BHU/Objects/QSO_B0647+250/Swift_UVOT"
+sk_image_dir="$swift_path/sk_image"
+mkdir -p "$sk_image_dir"
+
+for obs_folder in "$swift_path"/*; do
+    if [[ -d "$obs_folder" && "$(basename "$obs_folder")" != "sk_image" ]]; then
+        image_dir="$obs_folder/uvot/image"
+        if [[ -d "$image_dir" ]]; then
+            for file in "$image_dir"/*_sk.img.gz; do
+                if [[ -f "$file" ]]; then
+                    cp "$file" "$sk_image_dir/"
+                    echo "Copied: $(basename "$file")"
+                fi
+            done
+        fi
+    fi
+done
+
+echo "All done!"
