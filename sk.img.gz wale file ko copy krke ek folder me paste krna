@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Root path jaha saare observation ID folders rakhe hain
-root_path="/media/rohit/Expansion/BHU/Objects/Cen_A/Swift_UVOT"
+root_path="/media/rohit/Expsion/BHU/Objects/Cen_A/Swift_UVOT"
 
 # Swift_UVOT ke andar ek hi sk_image folder banao
 sk_image="$root_path/sk_image"
